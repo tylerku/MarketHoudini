@@ -1,0 +1,23 @@
+{
+  "name": "pupeteer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.mjs",
+  "dependencies": {
+    "puppeteer": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^13.1.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "compilerOptions": {
+    "lib": [
+      "es6",
+      "dom"
+    ]
+  }
+}
