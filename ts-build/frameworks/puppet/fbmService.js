@@ -36,11 +36,24 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var entities_1 = require("../../entities");
 var puppeteer = require("puppeteer");
 var FbmService = /** @class */ (function () {
     function FbmService() {
     }
-    FbmService.prototype.init = function () {
+    FbmService.prototype._close = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.browser.close()];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    FbmService.prototype.setup = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _a, _b;
             return __generator(this, function (_c) {
@@ -54,29 +67,29 @@ var FbmService = /** @class */ (function () {
                         return [4 /*yield*/, this.browser.newPage()];
                     case 2:
                         _b.page = _c.sent();
-                        return [4 /*yield*/, this._login()];
-                    case 3:
-                        _c.sent();
                         return [2 /*return*/];
                 }
             });
         });
     };
-    FbmService.prototype.getResultsFromSearch = function (searchQuery, count) {
+    FbmService.prototype.fetchItemsForSale = function (query, count) {
         return __awaiter(this, void 0, void 0, function () {
+            var items;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this._gotoMarketplace()];
+                    case 0: return [4 /*yield*/, this._login()];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/, new Promise(function (resolve, reject) {
-                                resolve(["one", "two"]);
-                            })];
+                        return [4 /*yield*/, this._searchMarketplace(query, count)];
+                    case 2:
+                        items = _a.sent();
+                        this._close();
+                        return [2 /*return*/, items];
                 }
             });
         });
     };
-    FbmService.prototype._gotoMarketplace = function () {
+    FbmService.prototype._searchMarketplace = function (query, count) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -88,7 +101,12 @@ var FbmService = /** @class */ (function () {
                         return [4 /*yield*/, this.page.screenshot({ path: 'snapshot.png' })];
                     case 2:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2 /*return*/, new Promise(function (resolve, reject) {
+                                resolve([
+                                    new entities_1.Item("Taylor Accoustic Guitar", "Guitar is in great condition. Needs new strings.", 400),
+                                    new entities_1.Item("Gibson Electric Guitar", "Needs some fixing up", 150)
+                                ]);
+                            })];
                 }
             });
         });
@@ -113,18 +131,6 @@ var FbmService = /** @class */ (function () {
                                 console.log(err);
                             })];
                     case 4:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    FbmService.prototype.close = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.browser.close()];
-                    case 1:
                         _a.sent();
                         return [2 /*return*/];
                 }

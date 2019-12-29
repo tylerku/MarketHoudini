@@ -43,7 +43,7 @@ var puppetMaster = require("./frameworks/puppet");
             case 0: return [4 /*yield*/, main()];
             case 1:
                 _a.sent();
-                console.log("exiting...");
+                console.log("exiting main");
                 return [2 /*return*/];
         }
     });
@@ -55,18 +55,17 @@ function main() {
             switch (_a.label) {
                 case 0:
                     fbmService = new puppetMaster.FbmService();
-                    return [4 /*yield*/, fbmService.init()];
+                    // fbmService = new scrapyMaster.FbmService();    <==== Use to switch from using puppeteer to scrappy 
+                    return [4 /*yield*/, fbmService.setup()];
                 case 1:
+                    // fbmService = new scrapyMaster.FbmService();    <==== Use to switch from using puppeteer to scrappy 
                     _a.sent();
-                    return [4 /*yield*/, fbmService.getResultsFromSearch("guitar", 10).then(function () {
-                            console.log("middleware...");
+                    return [4 /*yield*/, fbmService.fetchItemsForSale("guitar", 10).then(function (value) {
+                            console.log(value);
                         }).catch(function (err) {
-                            console.log("error: " + err);
+                            console.log("error fetching search results: " + err);
                         })];
                 case 2:
-                    _a.sent();
-                    return [4 /*yield*/, fbmService.close()];
-                case 3:
                     _a.sent();
                     return [2 /*return*/];
             }
