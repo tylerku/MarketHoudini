@@ -80,7 +80,7 @@ var FbmService = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this._login()];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, this._searchMarketplace(query, count)];
+                        return [4 /*yield*/, this._fetchItemsForSale(query, count)];
                     case 2:
                         items = _a.sent();
                         this._close();
@@ -89,17 +89,21 @@ var FbmService = /** @class */ (function () {
             });
         });
     };
-    FbmService.prototype._searchMarketplace = function (query, count) {
+    FbmService.prototype._fetchItemsForSale = function (query, count) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.page.goto('https://www.facebook.com/marketplace', { waitUntil: 'load' }).catch(function (err) {
-                            console.log('failed to load marketplace homepage. error: ' + err);
-                        })];
+                    case 0: 
+                    // scrape data from page...
+                    return [4 /*yield*/, this._gotoSearch(query)];
                     case 1:
+                        // scrape data from page...
                         _a.sent();
-                        return [4 /*yield*/, this.page.screenshot({ path: 'snapshot.png' })];
+                        return [4 /*yield*/, this._scrapeSearchResults()];
                     case 2:
+                        _a.sent();
+                        return [4 /*yield*/, this.page.screenshot({ path: 'marketplace.png' })];
+                    case 3:
                         _a.sent();
                         return [2 /*return*/, new Promise(function (resolve, reject) {
                                 resolve([
@@ -107,6 +111,40 @@ var FbmService = /** @class */ (function () {
                                     new entities_1.Item("Gibson Electric Guitar", "Needs some fixing up", 150)
                                 ]);
                             })];
+                }
+            });
+        });
+    };
+    FbmService.prototype._gotoSearch = function (query) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.page.goto('https://www.facebook.com/marketplace/search/?query=' + query, { waitUntil: 'load' }).then(function (resolve) {
+                            console.log("loaded marketplace search: " + query);
+                        }).catch(function (err) {
+                            console.log("failed to load marketplace search. error: " + err);
+                        })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    FbmService.prototype._scrapeSearchResults = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var searchFeedElem, childNodeText;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.page.$('[data-testid="marketplace_search_feed_content"]')];
+                    case 1:
+                        searchFeedElem = _a.sent();
+                        return [4 /*yield*/, searchFeedElem.$eval('div', function (node) { return node.children[0].innerHTML; })];
+                    case 2:
+                        childNodeText = _a.sent();
+                        console.log(childNodeText);
+                        return [2 /*return*/];
                 }
             });
         });
@@ -134,6 +172,13 @@ var FbmService = /** @class */ (function () {
                         _a.sent();
                         return [2 /*return*/];
                 }
+            });
+        });
+    };
+    FbmService.prototype._sleep = function (ms) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, new Promise(function (resolve) { return setTimeout(resolve, ms); })];
             });
         });
     };
